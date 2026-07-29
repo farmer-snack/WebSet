@@ -466,8 +466,7 @@
     }
 
     // 反馈提交 - 使用 Formsubmit.co（完全免费，无需注册）
-    // 已将邮箱设为 1980475843@qq.com，反馈会直接发送到该邮箱
-    const FEEDBACK_EMAIL = '1980475843@qq.com';
+    const FEEDBACK_TOKEN = 'c12a9bde3021cf0098233cc904f6fd12';
 
     document.getElementById('feedbackForm').addEventListener('submit', async function (e) {
       e.preventDefault();
@@ -481,7 +480,7 @@
       btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 提交中…';
 
       try {
-        const res = await fetch('https://formsubmit.co/ajax/' + FEEDBACK_EMAIL, {
+        const res = await fetch('https://formsubmit.co/ajax/' + FEEDBACK_TOKEN, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
