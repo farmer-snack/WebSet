@@ -594,15 +594,17 @@
 
     // 获取更新次数
     (async () => {
+      const FALLBACK_COUNT = 12;
       const el = document.getElementById('updateCount');
       try {
         const r = await fetch('https://api.github.com/repos/farmer-snack/WebSet/commits?per_page=1');
         const link = r.headers.get('Link');
         if (link) {
           const m = link.match(/page=(\d+)>; rel="last"/);
-          if (m) el.textContent = m[1];
+          if (m) { el.textContent = m[1]; return; }
         }
       } catch {}
+      el.textContent = FALLBACK_COUNT;
     })();
   </script>
 
