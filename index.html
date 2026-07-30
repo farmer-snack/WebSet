@@ -488,9 +488,24 @@
       // 获取用户IP和地理位置（不显示在前端）
       let geo = { ip: '', country: '', region: '', city: '', isp: '' };
       try {
-        const g = await fetch('https://ip-api.com/json/?fields=query,country,regionName,city,isp').then(r => r.json());
-        geo = { ip: g.query, country: g.country, region: g.regionName, city: g.city, isp: g.isp };
-      } catch {}
+        const ctrl = new AbortController();
+        const timer = setTimeout(() => ctrl.abort(), 5000);
+        const res = await fetch('https://api.ip.sb/geoip', { signal: ctrl.signal }).then(r => r.json());
+        clearTimeout(timer);
+        geo.ip = res.ip || '';
+        geo.country = res.country || '';
+        geo.region = res.region || '';
+        geo.city = res.city || '';
+        geo.isp = res.isp || '';
+      } catch {
+        try {
+          const ctrl = new AbortController();
+          const timer = setTimeout(() => ctrl.abort(), 4000);
+          const r = await fetch('https://api.ipify.org?format=json', { signal: ctrl.signal }).then(r => r.json());
+          clearTimeout(timer);
+          geo.ip = r.ip || '';
+        } catch {}
+      }
 
       try {
         const res = await fetch('https://formsubmit.co/ajax/' + FEEDBACK_TOKEN, {
@@ -502,11 +517,11 @@
             联系方式: this.contact.value || '未填写',
             描述: this.message.value,
             _captcha: 'false',
-            _ip: geo.ip,
-            _country: geo.country,
-            _region: geo.region,
-            _city: geo.city,
-            _isp: geo.isp
+            [IP地址]: geo.ip,
+            [所在国家]: geo.country,
+            [所在地区]: geo.region,
+            [所在城市]: geo.city,
+            [网络运营商]: geo.isp
           })
         });
         const data = await res.json();
