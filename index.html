@@ -485,6 +485,13 @@
       btn.disabled = true;
       btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 提交中…';
 
+      // 获取用户IP和地理位置（不显示在前端）
+      let geo = { ip: '', country: '', region: '', city: '', isp: '' };
+      try {
+        const g = await fetch('https://ip-api.com/json/?fields=query,country,regionName,city,isp').then(r => r.json());
+        geo = { ip: g.query, country: g.country, region: g.regionName, city: g.city, isp: g.isp };
+      } catch {}
+
       try {
         const res = await fetch('https://formsubmit.co/ajax/' + FEEDBACK_TOKEN, {
           method: 'POST',
@@ -494,7 +501,12 @@
             称呼: this.name.value || '未填写',
             联系方式: this.contact.value || '未填写',
             描述: this.message.value,
-            _captcha: 'false'
+            _captcha: 'false',
+            _ip: geo.ip,
+            _country: geo.country,
+            _region: geo.region,
+            _city: geo.city,
+            _isp: geo.isp
           })
         });
         const data = await res.json();
