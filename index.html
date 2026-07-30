@@ -459,7 +459,8 @@
     <footer>
       <a href="https://github.com/farmer-snack/WebSet" target="_blank"><i class="fab fa-github"></i> GitHub</a> ·
       <a href="terms.html"><i class="fas fa-file-contract"></i> 用户条款</a> ·
-      &copy; 2026 TectDos
+      &copy; 2026 TectDos ·
+      <span>第 <span id="updateCount">--</span> 次更新</span>
     </footer>
 
   </div>
@@ -590,6 +591,19 @@
         document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
       });
     });
+
+    // 获取更新次数
+    (async () => {
+      const el = document.getElementById('updateCount');
+      try {
+        const r = await fetch('https://api.github.com/repos/farmer-snack/WebSet/commits?per_page=1');
+        const link = r.headers.get('Link');
+        if (link) {
+          const m = link.match(/page=(\d+)>; rel="last"/);
+          if (m) el.textContent = m[1];
+        }
+      } catch {}
+    })();
   </script>
 
 </body>
