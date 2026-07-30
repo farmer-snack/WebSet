@@ -490,31 +490,28 @@
 
       // 获取用户IP和地理位置（不显示在前端）
       let geo = { ip: '', country: '', region: '', city: '', isp: '' };
-
-      // 先尝试 ip-api.com（最全，但中国可能慢）
       try {
         const c = new AbortController();
-        const t = setTimeout(() => c.abort(), 10000);
-        const r = await fetch('https://ip-api.com/json/?fields=query,country,regionName,city,isp', { signal: c.signal }).then(r => r.json());
+        const t = setTimeout(() => c.abort(), 8000);
+        const text = await fetch('https://myip.ipip.net', { signal: c.signal }).then(r => r.text());
         clearTimeout(t);
-        if (r.query) { geo.ip = r.query; geo.country = r.country; geo.region = r.regionName; geo.city = r.city; geo.isp = r.isp; }
+        const ipM = text.match(/[\d.]+/);
+        if (ipM) geo.ip = ipM[0];
+        const locM = text.match(/来自于：(.+)/);
+        if (locM) {
+          const parts = locM[1].split(' ');
+          if (parts[0]) geo.country = parts[0];
+          if (parts[1]) geo.region = parts[1];
+          if (parts[2]) geo.city = parts[2];
+          if (parts[3]) geo.isp = parts[3];
+        }
       } catch {
-        // 备用：至少拿到 IP
         try {
           const c = new AbortController();
           const t = setTimeout(() => c.abort(), 5000);
           const r = await fetch('https://api.ipify.org?format=json', { signal: c.signal }).then(r => r.json());
           clearTimeout(t);
           geo.ip = r.ip || '';
-        } catch {}
-        // 再备用：尝试中国可用的 API
-        try {
-          const c = new AbortController();
-          const t = setTimeout(() => c.abort(), 5000);
-          const r = await fetch('https://myip.ipip.net', { signal: c.signal }).then(r => r.text());
-          clearTimeout(t);
-          const m = r.match(/[\d.]+/);
-          if (m) geo.ip = m[0];
         } catch {}
       }
 
