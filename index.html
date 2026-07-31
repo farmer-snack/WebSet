@@ -450,6 +450,15 @@
           <textarea name="message" placeholder="请详细描述您遇到的问题或建议…" required></textarea>
         </div>
 
+        <div class="form-group">
+          <label>验证码 <span class="required">*</span></label>
+          <div style="display:flex;gap:12px;align-items:center;">
+            <input type="text" id="captchaInput" placeholder="请输入右侧验证码" style="flex:1;" autocomplete="off">
+            <span id="captchaBox" title="点击刷新" style="cursor:pointer;user-select:none;font-family:Consolas,monospace;font-size:22px;font-weight:700;letter-spacing:6px;padding:9px 18px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.25);border-radius:10px;color:#fbc2eb;text-shadow:0 0 6px rgba(251,194,235,0.6);"></span>
+            <button type="button" id="captchaRefresh" title="刷新验证码" style="padding:9px 14px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.25);border-radius:10px;color:#fff;cursor:pointer;"><i class="fas fa-sync-alt"></i></button>
+          </div>
+        </div>
+
         <button type="submit" class="btn-submit">
           <i class="fas fa-paper-plane"></i> 提交反馈
         </button>
@@ -474,6 +483,23 @@
       setTimeout(() => t.classList.remove('show'), 3000);
     }
 
+    // 验证码
+    let captchaCode = '';
+    function generateCaptcha() {
+      const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789';
+      captchaCode = '';
+      for (let i = 0; i < 4; i++) {
+        captchaCode += chars[Math.floor(Math.random() * chars.length)];
+      }
+      const box = document.getElementById('captchaBox');
+      if (box) box.textContent = captchaCode;
+      const input = document.getElementById('captchaInput');
+      if (input) input.value = '';
+    }
+    document.getElementById('captchaRefresh')?.addEventListener('click', generateCaptcha);
+    document.getElementById('captchaBox')?.addEventListener('click', generateCaptcha);
+    generateCaptcha();
+
     // 反馈提交 - 使用 Formsubmit.co（完全免费，无需注册）
     const FEEDBACK_TOKEN = 'c12a9bde3021cf0098233cc904f6fd12';
 
@@ -483,6 +509,13 @@
       const message = this.message.value.trim();
       if (!type) { showToast('请选择反馈类型'); return; }
       if (!message) { showToast('请填写问题描述'); return; }
+      const captchaInput = document.getElementById('captchaInput').value.trim();
+      if (!captchaInput) { showToast('请输入验证码'); return; }
+      if (captchaInput.toLowerCase() !== captchaCode.toLowerCase()) {
+        showToast('验证码错误，请重新输入');
+        generateCaptcha();
+        return;
+      }
 
       const btn = this.querySelector('.btn-submit');
       btn.disabled = true;
