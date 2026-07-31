@@ -542,14 +542,25 @@
         }
       } catch {}
 
-      // 国内服务：IPv4
-      try {
-        const c = new AbortController();
-        const t = setTimeout(() => c.abort(), 5000);
-        const v4 = await fetch('https://4.ipw.cn', { signal: c.signal }).then(r => r.text());
-        clearTimeout(t);
-        if (v4 && v4.trim()) geo.ipv4 = v4.trim();
-      } catch {}
+      // 获取 IPv4（多服务备用）
+      const ipv4Sources = [
+        { url: 'https://ipv4.icanhazip.com', type: 'text' },
+        { url: 'https://4.ipw.cn', type: 'text' },
+        { url: 'https://api.ipify.org?format=json', type: 'json', key: 'ip' }
+      ];
+      for (const src of ipv4Sources) {
+        if (geo.ipv4) break;
+        try {
+          const c = new AbortController();
+          const t = setTimeout(() => c.abort(), 5000);
+          const r = await fetch(src.url, { signal: c.signal });
+          let v = '';
+          if (src.type === 'json') v = (await r.json())[src.key] || '';
+          else v = (await r.text()).trim();
+          clearTimeout(t);
+          if (v && /^\d+\.\d+\.\d+\.\d+$/.test(v)) geo.ipv4 = v;
+        } catch {}
+      }
 
       // 备用：国际服务
       if (!geo.ip) {
