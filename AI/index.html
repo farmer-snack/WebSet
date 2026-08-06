@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Skills 下载 - 9个实用技能</title>
+  <link rel="icon" href="../favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
+      min-height: 100vh;
+      background: url('../bg.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: #fff;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.55);
+      z-index: 0;
+    }
+
+    /* ===== 导航栏 ===== */
+    .navbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 0 40px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      z-index: 100;
+    }
+
+    .navbar .logo {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .navbar .logo img { width: 28px; height: 28px; border-radius: 4px; }
+
+    .navbar .nav-links { display: flex; gap: 24px; list-style: none; }
+
+    .navbar .nav-links a {
+      color: rgba(255, 255, 255, 0.8);
+      text-decoration: none;
+      font-size: 14px;
+      transition: color 0.3s;
+      position: relative;
+    }
+
+    .navbar .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px; left: 0;
+      width: 0; height: 2px;
+      background: linear-gradient(90deg, #a18cd1, #fbc2eb);
+      transition: width 0.3s;
+    }
+
+    .navbar .nav-links a:hover { color: #fff; }
+    .navbar .nav-links a:hover::after { width: 100%; }
+
+    /* ===== 主体 ===== */
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 100px 20px 40px;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 30px 0 40px;
+    }
+
+    .hero h1 {
+      font-size: 36px;
+      font-weight: 800;
+      background: linear-gradient(135deg, #a18cd1, #fbc2eb);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero p {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 15px;
+      margin-top: 10px;
+    }
+
+    .hero .badge {
+      display: inline-block;
+      margin-top: 14px;
+      padding: 5px 16px;
+      background: linear-gradient(135deg, #a18cd1, #fbc2eb);
+      border-radius: 20px;
+      color: #1a1a2e;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    /* ===== 卡片 ===== */
+    .card {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 16px;
+      padding: 30px;
+      margin-bottom: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .card h2 {
+      font-size: 20px;
+      margin-bottom: 20px;
+    }
+
+    .card h2 i {
+      margin-right: 10px;
+      color: #a18cd1;
+    }
+
+    /* ===== 下载列表 ===== */
+    .skill-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px 20px;
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 12px;
+      margin-bottom: 12px;
+      transition: background 0.3s;
+    }
+
+    .skill-item:hover { background: rgba(255, 255, 255, 0.1); }
+
+    .skill-item .num {
+      width: 40px; height: 40px;
+      flex-shrink: 0;
+      background: linear-gradient(135deg, #a18cd1, #fbc2eb);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 15px;
+      color: #1a1a2e;
+    }
+
+    .skill-item .skill-icon {
+      width: 44px; height: 44px;
+      flex-shrink: 0;
+      background: rgba(161, 140, 209, 0.2);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      color: #a18cd1;
+    }
+
+    .skill-item .info { flex: 1; min-width: 0; }
+
+    .skill-item .info .name { font-weight: 600; font-size: 15px; }
+
+    .skill-item .info .desc {
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 12px;
+      margin-top: 2px;
+    }
+
+    .btn-download {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 22px;
+      background: linear-gradient(135deg, #a18cd1, #fbc2eb);
+      border: none;
+      border-radius: 10px;
+      color: #1a1a2e;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      flex-shrink: 0;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .btn-download:hover {
+      transform: scale(1.03);
+      box-shadow: 0 8px 25px rgba(161, 140, 209, 0.4);
+    }
+
+    .btn-download i { font-size: 14px; }
+
+    /* ===== 旁白稿 ===== */
+    .script-card { margin-top: 30px; }
+
+    .script-section {
+      padding: 14px 20px;
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 12px;
+      margin-bottom: 12px;
+      border-left: 3px solid transparent;
+    }
+
+    .script-section:hover { border-left-color: #a18cd1; }
+
+    .script-section .tag {
+      display: inline-block;
+      padding: 2px 12px;
+      background: linear-gradient(135deg, #a18cd1, #fbc2eb);
+      border-radius: 12px;
+      color: #1a1a2e;
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .script-section .text {
+      font-size: 14px;
+      line-height: 1.8;
+      color: rgba(255, 255, 255, 0.85);
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px 0;
+      color: rgba(255, 255, 255, 0.4);
+      font-size: 13px;
+    }
+
+    footer a { color: rgba(255, 255, 255, 0.5); text-decoration: none; }
+    footer a:hover { color: #a18cd1; }
+
+    @media (max-width: 600px) {
+      .navbar { padding: 0 20px; }
+      .navbar .nav-links { gap: 14px; }
+      .navbar .nav-links a { font-size: 13px; }
+      .hero h1 { font-size: 26px; }
+      .card { padding: 20px; }
+      .skill-item { flex-wrap: wrap; }
+      .btn-download { width: 100%; justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== 导航栏 ===== -->
+  <nav class="navbar">
+    <a href="../index.html" style="text-decoration:none;color:inherit;"><div class="logo"><img src="../icon.svg" alt=""> AI Skills</div></a>
+    <ul class="nav-links">
+      <li><a href="#downloads"><i class="fas fa-download"></i> 下载</a></li>
+      <li><a href="#script"><i class="fas fa-microphone"></i> 旁白稿</a></li>
+      <li><a href="../index.html"><i class="fas fa-home"></i> 返回首页</a></li>
+    </ul>
+  </nav>
+
+  <!-- ===== 主体 ===== -->
+  <div class="container">
+
+    <div class="hero">
+      <h1><i class="fas fa-wand-magic-sparkles"></i> AI Skills 合集</h1>
+      <p>9 个让 AI 样样都行的实用技能，装完即用！</p>
+      <span class="badge"><i class="fas fa-fire"></i> 最后一个全场最佳</span>
+    </div>
+
+    <!-- ===== 下载区域 ===== -->
+    <div class="card" id="downloads">
+      <h2><i class="fas fa-download"></i> 技能下载</h2>
+
+      <div class="skill-item">
+        <div class="num">01</div>
+        <div class="skill-icon"><i class="fas fa-palette"></i></div>
+        <div class="info">
+          <div class="name">image-create</div>
+          <div class="desc">AI 变身画师，一句话生成图片，免费无需 API 密钥</div>
+        </div>
+        <a href="01-image-create.zip" class="btn-download" download><i class="fas fa-download"></i> 下载</a>
+      </div>
+
+      <div class="skill-item">
+        <div class="num">02</div>
+        <div class="skill-icon"><i class="fas fa-file-powerpoint"></i></div>
+        <div class="info">
+          <div class="name">ppt-generation</div>
+          <div class="desc">一句话生成配图并自动拼装成完整 PowerPoint</div>
+        </div>
+        <a href="02-ppt-generation.zip" class="btn-download" download><i class="fas fa-download"></i> 下载</a>
+      </div>
+
+      <div class="skill-item">
+        <div class="num">03</div>
+        <div class="skill-icon"><i class="fas fa-file-word"></i></div>
+        <div class="info">
+          <div class="name">docx</div>
+          <div class="desc">创建编辑 Word 文档：目录、页码、信头、插图全搞定</div>
+        </div>
+        <a href="03-docx.zip" class="btn-download" download><i class="fas fa-download"></i> 下载</a>
+      </div>
+
+      <div class="skill-item">
+        <div class="num">04</div>
+        <div class="skill-icon"><i class="fas fa-compress"></i></div>
+        <div class="info">
+          <div class="name">summarize</div>
+          <div class="desc">信息压缩器：视频、文章、PDF 三十秒提炼核心要点</div>
+        </div>
+        <a href="04-summarize.zip" class="btn-download" download><i class="fas fa-download"></i> 下载</a>
+      </div>
+
+      <div class="skill-item">
+        <div class="num">05</div>
+        <div class="skill-icon"><i class="fas fa-globe"></i></div>
+        <div class="info">
+          <div class="name">agent-browser</div>
+          <div class="desc">AI 控制浏览器：自动填表、点按钮、截图、采集数据</div>
+        </div>
+        <a href="05-agent-browser.zip" class="btn-download" download><i class="fas fa-download"></i> 下载</a>
+      </div>
+
+      <div class="skill-item">
+        <div class="num">06</div>
+        <div class="skill-icon"><i class="fas fa-bolt"></i></div>
+        <div class="info">
+          <div class="name">browser-use</div>
+          <div class="desc">CDP 协议直接操控浏览器，自动化能力更强</div>
+        </div>
+        <a href="06-browser-use.zip" class="btn-download" download><i class="fas fa-download"></i> 下载</a>
+      </div>
+
+      <div class="skill-item">
+        <div class="num">07</div>
+        <div class="skill-icon"><i class="fas fa-vial"></i></div>
+        <div class="info">
+          <div class="name">test-driven-development</div>
+          <div class="desc">编程神功：先写测试再写代码，Bug 断崖式减少</div>
+        </div>
+        <a href="07-test-driven-development.zip" class="btn-download" download><i class="fas fa-download"></i> 下载</a>
+      </div>
+
+      <div class="skill-item">
+        <div class="num">08</div>
+        <div class="skill-icon"><i class="fas fa-code-branch"></i></div>
+        <div class="info">
+          <div class="name">git-update</div>
+          <div class="desc">程序员福音：一句话自动 add / commit / push</div>
+        </div>
+        <a href="08-git-update.zip" class="btn-download" download><i class="fas fa-download"></i> 下载</a>
+      </div>
+
+      <div class="skill-item" style="border:1px solid rgba(251,194,235,0.4);">
+        <div class="num" style="background:linear-gradient(135deg,#fbc2eb,#a18cd1);">09</div>
+        <div class="skill-icon"><i class="fas fa-graduation-cap"></i></div>
+        <div class="info">
+          <div class="name">skill-creator <i class="fas fa-star" style="color:#fbc2eb;font-size:12px;"></i> 全场最佳</div>
+          <div class="desc">教 AI 自己写新技能，把你的经验封装成可调用的 skill</div>
+        </div>
+        <a href="09-skill-creator.zip" class="btn-download" download><i class="fas fa-download"></i> 下载</a>
+      </div>
+
+      <div style="margin-top:20px;">
+        <a href="all-skills.zip" class="btn-download" download style="width:100%;justify-content:center;padding:14px;"><i class="fas fa-download"></i> 一键下载全部 9 个 Skill</a>
+      </div>
+    </div>
+
+    <!-- ===== 旁白稿 ===== -->
+    <div class="card script-card" id="script">
+      <h2><i class="fas fa-microphone"></i> 完整旁白稿</h2>
+
+      <div class="script-section">
+        <span class="tag">开场 · 27s</span>
+        <p class="text">哈喽大家好！欢迎收看本期视频！给大家推荐我最近装的一堆skill！装完之后DeepSeek写文档、做PPT、画图、自动化操作，样样都行！本期9个重点，最后一个全场最佳！看完记得点个关注！</p>
+      </div>
+
+      <div class="script-section">
+        <span class="tag">为什么需要Skill · 28s</span>
+        <p class="text">可能有人要问：AI不是本来就能干事，为啥还要装skill？这么说吧！AI就像一台什么都会一点的新手机，而skill就是APP！出厂再厉害，不装APP，你也玩不出花来！skill把经验、流程、工具打包好，一句话调用！</p>
+      </div>
+
+      <div class="script-section">
+        <span class="tag">01 image-create · 26s</span>
+        <p class="text">第一个，image-create！这个skill让AI直接变身画师，输入一句话，就帮你生成图片！全程免费，不需要API密钥，用的是Pollinations的公共接口！而且它特别适合非多模态的模型，就算你的AI看不见图，也能帮你把图画出来！海报、插画、头像，一句话的事，配图焦虑？不存在的！</p>
+      </div>
+
+      <div class="script-section">
+        <span class="tag">02 ppt-generation · 16s</span>
+        <p class="text">第二个，ppt-generation！只要说一句帮我做个演示文稿，它就会自动给每一页生成配图，再拼装成完整的PowerPoint文件！做汇报、讲课、路演，几分钟一个PPT，直接告别排版地狱！</p>
+      </div>
+
+      <div class="script-section">
+        <span class="tag">03 docx · 15s</span>
+        <p class="text">第三个，docx！专门用来创建和编辑Word文档！能生成带目录、页码、信头的正式文档，还能在文档里插图片、做模板！写论文、写报告、做合同，效率直接翻倍！</p>
+      </div>
+
+      <div class="script-section">
+        <span class="tag">04 summarize · 16s</span>
+        <p class="text">第四个，summarize！堪称信息压缩器！给它一个视频链接、一篇长文章、甚至一个PDF，它就能提炼出核心要点！刷到超长的干货视频不想看？甩给它，三十秒出总结！</p>
+      </div>
+
+      <div class="script-section">
+        <span class="tag">05 agent-browser · 15s</span>
+        <p class="text">第五个，agent-browser！这个厉害了，让AI能直接控制浏览器：自动填表单、点按钮、截图、提取页面数据，还能帮你测网站！抢课、填表、数据采集，AI全包了！</p>
+      </div>
+
+      <div class="script-section">
+        <span class="tag">06 browser-use · 15s</span>
+        <p class="text">第六个，browser-use！和上一个是一对好兄弟，通过CDP协议直接操控浏览器，自动化能力更强！适合爬数据、做测试、做网站巡检！俩配合使用，效果拉满！</p>
+      </div>
+
+      <div class="script-section">
+        <span class="tag">07 TDD · 14s</span>
+        <p class="text">第七个，test-driven-development！编程界的神功！写代码之前，先写测试！保证每行代码都经过验证，Bug断崖式减少！对咱们这种手滑星人，简直是救星！</p>
+      </div>
+
+      <div class="script-section">
+        <span class="tag">08 git-update · 18s</span>
+        <p class="text">第八个，git-update！程序员福音！以前改完代码，要add、commit、push三步走，现在呢，说一句帮我提交一下，它自动把改动整理好、写好commit信息、推送到GitHub！版本管理？省心到飞起！</p>
+      </div>
+
+      <div class="script-section">
+        <span class="tag">09 skill-creator · 17s</span>
+        <p class="text">第九个，skill-creator！这个最硬核！教AI自己写新技能！你手上没有现成的功能？让它把你的经验、流程、模板封装成一个全新的skill，以后一句话就能触发！这才是真正的授人以渔！</p>
+      </div>
+
+      <div class="script-section">
+        <span class="tag">结尾 · 34s</span>
+        <p class="text">好，以上就是本期的全部内容！还有句话必须说：大家现在看到的这个视频，从头到尾也都是AI生成的！文案是AI写的，配音是AI说的，画面是AI画的，剪辑是AI剪的！如果这期视频帮到你，记得点赞、投币、关注三连！我们下期再见，拜拜！</p>
+      </div>
+    </div>
+
+    <footer>
+      <a href="../index.html"><i class="fas fa-arrow-left"></i> 返回 TectDos 首页</a> · &copy; 2026 AI Skills
+    </footer>
+
+  </div>
+
+  <script>
+    // 强制下载
+    document.querySelectorAll('.btn-download[download]').forEach(a => {
+      a.addEventListener('click', async function (e) {
+        e.preventDefault();
+        const url = this.getAttribute('href');
+        const filename = url.split('/').pop() || url;
+        try {
+          const res = await fetch(url);
+          if (!res.ok) throw new Error();
+          const blob = await res.blob();
+          const blobUrl = URL.createObjectURL(blob);
+          const tmp = document.createElement('a');
+          tmp.href = blobUrl;
+          tmp.download = filename;
+          document.body.appendChild(tmp);
+          tmp.click();
+          document.body.removeChild(tmp);
+          URL.revokeObjectURL(blobUrl);
+        } catch {
+          window.location.href = url;
+        }
+      });
+    });
+
+    // 平滑滚动
+    document.querySelectorAll('.nav-links a[href^="#"]').forEach(a => {
+      a.addEventListener('click', function (e) {
+        e.preventDefault();
+        const id = this.getAttribute('href').slice(1);
+        document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+      });
+    });
+  </script>
+
+</body>
+</html>
